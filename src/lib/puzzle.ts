@@ -22,53 +22,54 @@ class Puzzle {
 
 	getRow(value: number): Series {
 		if (value < 0 || value >= 9) {
-			return new NilSeries([]);
+			return new NilSeries();
 		}
 
-		const result: number[] = [9];
+		const result = new Series();
 
 		const start = value * 9;
 		const end = (value + 1) * 9;
 		for (let i = start; i < end; i += 1) {
-			result.push(this.tiles[i] || 0);
+			result.push(this.tiles[i]);
 		}
 
-		return new Series(result);
+		return result;
 	}
 
 	getColumn(value: number): Series {
 		if (value < 0 || value >= 9) {
-			return new NilSeries([]);
+			return new NilSeries();
 		}
 
-		const result: number[] = [9];
+		const result = new Series();
 
 		const start = value - 1;
 		const end = 72 + value - 1;
 		for (let i = start; i < end; i += 9) {
-			result.push(this.tiles[i] || 0);
+			result.push(this.tiles[i]);
 		}
 
-		return new Series(result);
+		return result;
 	}
 
 	getSquare(row: number, column: number): Series {
 		if (row < 0 || row >= 9 || column < 0 || column >= 9) {
-			return new NilSeries([]);
+			return new NilSeries();
 		}
 
-		const result: number[] = [9];
+		const result = new Series();
 
 		const startRow = floor(row / 3) * 3;
 		const startColumn = floor(column / 3) * 3;
 		for (let i = startRow; i < startRow + 3; i += 3) {
 			for (let j = startColumn; j < startColumn + 3; j += 3) {
 				const index = i * 9 + j;
-				result.push(this.tiles[index] || 0);
+
+				result.push(this.tiles[index]);
 			}
 		}
 
-		return new Series(result);
+		return result;
 	}
 
 	generate(): number[] {
@@ -83,9 +84,7 @@ class Puzzle {
 class Series {
 	private values: number[] = [];
 
-	constructor(values: number[]) {
-		this.values = values;
-	}
+	constructor() {}
 
 	push(value: number): void {
 		if (value <= 0 || value > 9) {
@@ -99,24 +98,27 @@ class Series {
 		this.values.push(value);
 	}
 
-	// pop(): void {
-	// 	this.values.pop();
-	// }
-
 	get(index: number): number {
 		return this.values[index];
+	}
+
+	isUnique(): boolean {
+		return uniq(this.values).length == this.values.length;
 	}
 
 	isValid(): boolean {
 		let result = 0;
 
 		for (const value of uniq(this.values)) {
+			if (value <= 0 || value > 9) {
+				return false;
+			}
+
 			// 1 + 9 = 10
 			// 2 + 8 = 10
 			// 3 + 7 = 10
 			// 4 + 6 = 10
-			// 5 =5
-
+			// 5 = 5
 			result += value;
 		}
 
@@ -129,6 +131,10 @@ class Series {
 }
 
 class NilSeries extends Series {
+	isUnique(): boolean {
+		return false;
+	}
+
 	isValid(): boolean {
 		return false;
 	}
