@@ -1,4 +1,4 @@
-import { uniq, orderBy, floor } from 'lodash';
+import { uniq, orderBy, floor, random } from 'lodash';
 
 class ExistingValueError extends Error {
 	name: string;
@@ -13,12 +13,20 @@ class ExistingValueError extends Error {
 }
 
 class Puzzle {
-	tiles = [];
-	rows = [];
-	columns = [];
-	squares = [];
+	tiles: number[] = [];
+	// rows = [];
+	// columns = [];
+	// squares = [];
 
 	Puzzle() {}
+
+	push(value: number): void {
+		this.tiles.push(value);
+	}
+
+	pop(): void {
+		this.tiles.pop();
+	}
 
 	getRow(value: number): Series {
 		if (value < 0 || value >= 9) {
@@ -72,12 +80,26 @@ class Puzzle {
 		return result;
 	}
 
-	generate(): number[] {
-		return [1, 2];
-	}
-
 	isValid(): boolean {
-		return false;
+		for (let i = 0; i < 9; i += 1) {
+			if (!this.getRow(i).isValid()) {
+				return false;
+			}
+
+			if (!this.getColumn(i).isValid()) {
+				return false;
+			}
+		}
+
+		for (let i = 0; i < 9; i += 1) {
+			for (let j = 0; j < 9; j += 1) {
+				if (!this.getSquare(i, j).isValid()) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 }
 
@@ -142,4 +164,14 @@ class NilSeries extends Series {
 	isComplete(): boolean {
 		return false;
 	}
+}
+
+const generateSimplePuzzle = (): void => {
+	// const result = new Puzzle();
+
+	console.log(random(1, 9));
+};
+
+for (let i = 0; i < 200; i += 1) {
+	generateSimplePuzzle();
 }

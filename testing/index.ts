@@ -28,34 +28,57 @@ class Puzzle {
 	private addTo: AddTo = AddTo.Row;
 
 	push(value: number): void {
-		console.log(`Trying number ${value}`);
-		if (this.addTo == AddTo.Row) {
-			this.tiles.push(value);
+		for (let columnNumber = 0; columnNumber < 9; columnNumber += 1) {
+			// Maybe randomise it?
+			// const squareNumber = random(0, 2)
+			const squareNumber = columnNumber % 3;
+
+			let rowNumber;
+			do {
+				// TODO: Change to random from 0 to 2
+				const randomRowPlacement = random(0, 2);
+				rowNumber = squareNumber * 3 + randomRowPlacement;
+
+				// while (this.isValid(rowNumber, columnNumber)) {
+				if (columnNumber - 3 > 0) {
+					// const rowNumber = squareNumber + randomRowPlacement;
+					const index = rowNumber * 9 + columnNumber;
+
+					this.tiles[index] = value;
+				}
+			} while (this.isValid(rowNumber, columnNumber));
 		}
 
-		const rowNumber = floor((this.tiles.length - 1) / 9);
-		const columnNumber = (this.tiles.length - 1) % 9;
+		// console.log(`Trying number ${value}`);
+		// if (this.addTo == AddTo.Row) {
+		// 	this.tiles.push(value);
+		// }
+		//
+		// const rowNumber = floor((this.tiles.length - 1) / 9);
+		// const columnNumber = (this.tiles.length - 1) % 9;
+		//
+		// console.log(`It has ${this.tiles.length} tiles`);
+		// // console.log(`Row is number ${rowNumber}`);
+		// // console.log(`Column is number ${columnNumber}`);
+		//
+		// // validate
+		// if (!this.getRow(rowNumber).isUnique()) {
+		// 	this.tiles.pop();
+		//
+		// 	return;
+		// }
+		//
+		// console.log('Row is unique');
+		//
+		// if (!this.getColumn(columnNumber).isUnique()) {
+		// 	for (let i = 0; i < columnNumber; i += 1) {
+		// 		this.tiles.pop();
+		// 	}
+		//
+		// 	return;
+		// }
 
-		console.log(`It has ${this.tiles.length} tiles`);
-		// console.log(`Row is number ${rowNumber}`);
-		// console.log(`Column is number ${columnNumber}`);
-
-		// validate
-		if (!this.getRow(rowNumber).isUnique()) {
-			this.tiles.pop();
-
-			return;
-		}
-
-		console.log('Row is unique');
-
-		if (!this.getColumn(columnNumber).isUnique()) {
-			for (let i = 0; i < columnNumber; i += 1) {
-				this.tiles.pop();
-			}
-
-			return;
-		}
+		// this.getRow(index);
 
 		// console.log('Column is unique');
 
@@ -131,30 +154,30 @@ class Puzzle {
 		return result;
 	}
 
-	isValid(): boolean {
-		for (let i = 0; i < 9; i += 1) {
-			if (!this.getRow(i).isValid()) {
-				return false;
-			}
-
-			if (!this.getColumn(i).isValid()) {
-				return false;
-			}
+	isValid(rowNumber: number, columnNumber: number): boolean {
+		if (!this.getRow(rowNumber).isValid()) {
+			return false;
 		}
 
-		for (let i = 0; i < 9; i += 1) {
-			for (let j = 0; j < 9; j += 1) {
-				if (!this.getSquare(i, j).isValid()) {
-					return false;
-				}
-			}
+		if (!this.getColumn(columnNumber).isValid()) {
+			return false;
+		}
+
+		if (!this.getSquare(rowNumber, columnNumber).isValid()) {
+			return false;
 		}
 
 		return true;
 	}
 
 	isFull(): boolean {
-		return this.tiles.length == 81;
+		for (let index = 0; index < 81; index += 1) {
+			if (this.tiles[index] <= 0 || this.tiles[index] > 9) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	toString(): string {
@@ -268,6 +291,8 @@ const generateRandomPuzzle = (limit?: number): Puzzle => {
 
 	return new NilPuzzle();
 };
+
+const placeColumn = () => {};
 
 const puzzle = generateRandomPuzzle(100000000);
 
