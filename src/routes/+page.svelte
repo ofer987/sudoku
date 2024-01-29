@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { generateSudokuPuzzle } from './puzzle';
+
 	const puzzle = generateSudokuPuzzle();
 </script>
 
