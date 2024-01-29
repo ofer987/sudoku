@@ -28,68 +28,93 @@ class Puzzle {
 	private addTo: AddTo = AddTo.Row;
 
 	push(value: number): void {
-		for (let columnNumber = 0; columnNumber < 9; columnNumber += 1) {
+		// let tileValue = this.tiles[index];
+		for (let columnNumber = 0; columnNumber < 9; ) {
+			// let rowNumber = 0;
+			// let index = rowNumber * 9 + columnNumber;
+
+			const squareNumber = random(0, 2);
+			const randomRowPlacement = random(0, 2);
+
+			const rowNumber = squareNumber * 3 + randomRowPlacement;
+			const index = rowNumber * 9 + columnNumber;
+
+			// index has already been filled
+			if (this.tiles[index] > 0 && this.tiles[index] <= 9) {
+				continue;
+			}
+
+			//
+			// rowNumber += 1;
+			// for (let columnNumber = 0; columnNumber < 9; columnNumber += 1) {
 			// Maybe randomise it?
 			// const squareNumber = random(0, 2)
-			const squareNumber = columnNumber % 3;
+			// const squareNumber = columnNumber % 3;
 
-			let rowNumber;
-			do {
-				// TODO: Change to random from 0 to 2
-				const randomRowPlacement = random(0, 2);
-				rowNumber = squareNumber * 3 + randomRowPlacement;
+			// let rowNumber;
+			// do {
+			// TODO: Change to random from 0 to 2
+			// const randomRowPlacement = random(0, 2);
+			// rowNumber = squareNumber * 3 + randomRowPlacement;
 
-				// while (this.isValid(rowNumber, columnNumber)) {
-				if (columnNumber - 3 > 0) {
-					// const rowNumber = squareNumber + randomRowPlacement;
-					const index = rowNumber * 9 + columnNumber;
+			// while (this.isValid(rowNumber, columnNumber)) {
+			// if (columnNumber - 3 > 0) {
+			// 	// const rowNumber = squareNumber + randomRowPlacement;
+			// 	const index = rowNumber * 9 + columnNumber;
+			//
+			// 	this.tiles[index] = value;
+			// }
 
-					this.tiles[index] = value;
-				}
-			} while (this.isValid(rowNumber, columnNumber));
+			// this.tiles[index] = value;
+			if (this.isValid(value, rowNumber, columnNumber)) {
+				this.tiles[index] = value;
+				columnNumber += 1;
+			}
 		}
-
-		// console.log(`Trying number ${value}`);
-		// if (this.addTo == AddTo.Row) {
-		// 	this.tiles.push(value);
-		// }
-		//
-		// const rowNumber = floor((this.tiles.length - 1) / 9);
-		// const columnNumber = (this.tiles.length - 1) % 9;
-		//
-		// console.log(`It has ${this.tiles.length} tiles`);
-		// // console.log(`Row is number ${rowNumber}`);
-		// // console.log(`Column is number ${columnNumber}`);
-		//
-		// // validate
-		// if (!this.getRow(rowNumber).isUnique()) {
-		// 	this.tiles.pop();
-		//
-		// 	return;
-		// }
-		//
-		// console.log('Row is unique');
-		//
-		// if (!this.getColumn(columnNumber).isUnique()) {
-		// 	for (let i = 0; i < columnNumber; i += 1) {
-		// 		this.tiles.pop();
-		// 	}
-		//
-		// 	return;
-		// }
-
-		// this.getRow(index);
-
-		// console.log('Column is unique');
-
-		// if (!this.getSquare(rowNumber, columnNumber).isUnique()) {
-		// 	this.tiles.pop();
-		//
-		// 	return;
-		// }
-
-		// console.log('Square is unique');
+		// while (tileValue == value && this.isValid(rowNumber, columnNumber) {
 	}
+
+	// console.log(`Trying number ${value}`);
+	// if (this.addTo == AddTo.Row) {
+	// 	this.tiles.push(value);
+	// }
+	//
+	// const rowNumber = floor((this.tiles.length - 1) / 9);
+	// const columnNumber = (this.tiles.length - 1) % 9;
+	//
+	// console.log(`It has ${this.tiles.length} tiles`);
+	// // console.log(`Row is number ${rowNumber}`);
+	// // console.log(`Column is number ${columnNumber}`);
+	//
+	// // validate
+	// if (!this.getRow(rowNumber).isUnique()) {
+	// 	this.tiles.pop();
+	//
+	// 	return;
+	// }
+	//
+	// console.log('Row is unique');
+	//
+	// if (!this.getColumn(columnNumber).isUnique()) {
+	// 	for (let i = 0; i < columnNumber; i += 1) {
+	// 		this.tiles.pop();
+	// 	}
+	//
+	// 	return;
+	// }
+
+	// this.getRow(index);
+
+	// console.log('Column is unique');
+
+	// if (!this.getSquare(rowNumber, columnNumber).isUnique()) {
+	// 	this.tiles.pop();
+	//
+	// 	return;
+	// }
+
+	// console.log('Square is unique');
+	// }
 
 	// private pop(): void {
 	// 	this.tiles.pop();
@@ -154,16 +179,16 @@ class Puzzle {
 		return result;
 	}
 
-	isValid(rowNumber: number, columnNumber: number): boolean {
-		if (!this.getRow(rowNumber).isValid()) {
+	isValid(value: number, rowNumber: number, columnNumber: number): boolean {
+		if (this.getRow(rowNumber).includes(value)) {
 			return false;
 		}
 
-		if (!this.getColumn(columnNumber).isValid()) {
+		if (this.getColumn(columnNumber).includes(value)) {
 			return false;
 		}
 
-		if (!this.getSquare(rowNumber, columnNumber).isValid()) {
+		if (this.getSquare(rowNumber, columnNumber).includes(value)) {
 			return false;
 		}
 
@@ -174,6 +199,57 @@ class Puzzle {
 		for (let index = 0; index < 81; index += 1) {
 			if (this.tiles[index] <= 0 || this.tiles[index] > 9) {
 				return false;
+			}
+		}
+
+		return true;
+	}
+
+	isComplete(): boolean {
+		for (let i = 0; i < 9; i += 1) {
+			const row = this.getRow(i);
+			if (!row.isValid()) {
+				return false;
+			}
+
+			if (!row.isUnique()) {
+				return false;
+			}
+
+			if (row.sum() != 45) {
+				return false;
+			}
+		}
+
+		for (let i = 0; i < 9; i += 1) {
+			const column = this.getColumn(i);
+			if (!column.isValid()) {
+				return false;
+			}
+
+			if (!column.isUnique()) {
+				return false;
+			}
+
+			if (column.sum() != 45) {
+				return false;
+			}
+		}
+
+		for (let i = 0; i < 9; i += 1) {
+			for (let j = 0; j < 9; j += 1) {
+				const square = this.getSquare(i, j);
+				if (!square.isValid()) {
+					return false;
+				}
+
+				if (!square.isUnique()) {
+					return false;
+				}
+
+				if (square.sum() != 45) {
+					return false;
+				}
 			}
 		}
 
@@ -200,9 +276,13 @@ class NilPuzzle extends Puzzle {
 }
 
 class Series {
-	private values: number[] = [];
+	public values: number[] = [];
 
 	constructor() {}
+
+	includes(value: number): boolean {
+		return this.values.includes(value);
+	}
 
 	push(value: number): void {
 		if (typeof value === 'undefined') {
@@ -251,6 +331,16 @@ class Series {
 
 	isComplete(): boolean {
 		return this.values.length == 9;
+	}
+
+	sum(): number {
+		let result = 0;
+
+		for (let i = 0; i < 9; i += 1) {
+			result += this.values[i];
+		}
+
+		return result;
 	}
 }
 
