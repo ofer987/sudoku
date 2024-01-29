@@ -20,8 +20,10 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <style lang="scss">
+	@import '@fontsource/fira-mono';
+
 	.puzzle {
-		font-family: monospace;
+		font-family: 'Fira Mono';
 
 		display: grid;
 		grid-template-rows: 2em 2em 2em 2em 2em 2em 2em 2em 2em;
