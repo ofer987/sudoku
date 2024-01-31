@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { generateSudokuPuzzle } from './puzzle';
-	import Puzzle from './Puzzle.svelte';
+	import { Puzzle } from './puzzle';
+	import Tile from './tile.svelte';
 
-	const puzzle = generateSudokuPuzzle();
+	export let puzzle: Puzzle;
+	let startingBoard = puzzle.board;
+
+	let state = startingBoard;
 </script>
 
 <svelte:head>
@@ -10,9 +13,9 @@
 </svelte:head>
 
 <div class="puzzle">
-	{#await puzzle then resolvedPuzzle}
-		<Puzzle puzzle={resolvedPuzzle} />
-	{/await}
+	{#each state as value}
+		<Tile {value} />
+	{/each}
 </div>
 
 <style lang="scss">
