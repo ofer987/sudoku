@@ -4,13 +4,21 @@ import sudokuJs from './sudokujs/index';
 
 export class Tile {
 	private index: number;
-	public current: number | null;
+	private currentValue: number | null;
 	private correct: number;
 
 	constructor(index: number, currentValue: number | null, correctValue: number) {
 		this.index = index;
-		this.current = currentValue;
+		this.currentValue = currentValue;
 		this.correct = correctValue;
+	}
+
+	get current(): number | null {
+		return this.currentValue;
+	}
+
+	set current(value: number | null) {
+		this.currentValue = value;
 	}
 
 	get isOriginal(): boolean {
@@ -18,7 +26,7 @@ export class Tile {
 	}
 
 	get isCorrect(): boolean {
-		return this.current != null && this.current == this.correct;
+		return this.currentValue != null && this.currentValue == this.correct;
 	}
 }
 

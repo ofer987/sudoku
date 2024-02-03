@@ -1,22 +1,27 @@
 <script lang="ts">
 	import { Tile } from './puzzle';
 
-	export let value: Tile;
+	export let tile: Tile;
+	const valueChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+	// function setValue(newValue: number) {
+	// 	tile.current = newValue;
+	// }
 
 	function isInputElement(): boolean {
-		return !value.isOriginal;
+		return !tile.isOriginal;
 	}
 
 	function displayedValue(): string {
-		if (value.current) {
-			return value.current.toString();
+		if (tile.current) {
+			return tile.current.toString();
 		}
 
 		return ' ';
 	}
 
 	function isCorrect(): boolean {
-		return value.isCorrect;
+		return tile.isCorrect;
 	}
 	// let answer = puzzle.answer;
 	// let startingBoard = puzzle.board;
@@ -27,9 +32,13 @@
 </script>
 
 {#if isInputElement()}
-	<input type="text" value={displayedValue()} />
+	<select class="tile" class:correct={tile.isCorrect} bind:value={tile.current}>
+		{#each valueChoices as value}
+			<option {value}>{value}</option>
+		{/each}
+	</select>
 {:else}
-	<div class="tile" class:correct={isCorrect()}>
+	<div class="tile answer" class:correct={isCorrect()}>
 		{displayedValue()}
 	</div>
 {/if}
@@ -44,12 +53,28 @@
 		display: grid;
 		color: red;
 
+		/* width: 4em; */
+		/* height: 4em; */
+
 		&.correct {
 			color: blue;
 		}
 
-	input {
-		width: 1em;
-		height: 1em;
+		&.answer {
+			display: block;
+		}
+		/*  */
+		/* &:not(:hover) { */
+		/* 	display: block; */
+		/* } */
+	}
+
+	select {
+		width: 3em;
+		height: 2em;
+		/*  */
+		/* &.correct { */
+		/* 	color: blue; */
+		/* } */
 	}
 </style>
