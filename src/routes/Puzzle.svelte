@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Puzzle } from './puzzle';
-	import Tile from './tile.svelte';
+	import Tile from './Tile.svelte';
 
 	export let puzzle: Puzzle;
 	let startingBoard = puzzle.board;
@@ -24,8 +24,8 @@
 	.puzzle {
 		font-family: 'Fira Mono';
 
-		/* padding: 500px; */
 		display: grid;
+		grid-gap: 1em;
 		grid-template-rows: 4em 4em 4em 4em 4em 4em 4em 4em 4em;
 		grid-template-columns: 4em 4em 4em 4em 4em 4em 4em 4em 4em;
 		align-items: center;

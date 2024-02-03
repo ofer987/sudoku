@@ -3,14 +3,18 @@ const { toNumber } = lodash;
 import sudokuJs from './sudokujs/index';
 
 export class Tile {
-	private index: number;
+	private indexValue: number;
 	private currentValue: number | null;
 	private correct: number;
 
 	constructor(index: number, currentValue: number | null, correctValue: number) {
-		this.index = index;
+		this.indexValue = index;
 		this.currentValue = currentValue;
 		this.correct = correctValue;
+	}
+
+	get index(): number {
+		return this.indexValue;
 	}
 
 	get current(): number | null {
