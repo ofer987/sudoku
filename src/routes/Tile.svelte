@@ -3,6 +3,10 @@
 
 	export let value: Tile;
 
+	function isInputElement(): boolean {
+		return !value.isOriginal;
+	}
+
 	function displayedValue(): string {
 		if (value.current) {
 			return value.current.toString();
@@ -22,7 +26,13 @@
 	// const puzzle = generateSudokuPuzzle();
 </script>
 
-<div class="tile" class:correct={isCorrect()}>{displayedValue()}</div>
+{#if isInputElement()}
+	<input type="text" value={displayedValue()} />
+{:else}
+	<div class="tile" class:correct={isCorrect()}>
+		{displayedValue()}
+	</div>
+{/if}
 
 <style lang="scss">
 	@import '@fontsource/fira-mono';
@@ -37,5 +47,9 @@
 		&.correct {
 			color: blue;
 		}
+
+	input {
+		width: 1em;
+		height: 1em;
 	}
 </style>

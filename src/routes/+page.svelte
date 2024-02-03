@@ -9,11 +9,9 @@
 	<title>Dan's Sudoku (Puzzles generated using third-party library)</title>
 </svelte:head>
 
-<div class="puzzle">
-	{#await puzzle then resolvedPuzzle}
-		<Puzzle puzzle={resolvedPuzzle} />
-	{/await}
-</div>
+{#await puzzle then resolvedPuzzle}
+	<Puzzle puzzle={resolvedPuzzle} />
+{/await}
 
 <style lang="scss">
 	@import '@fontsource/fira-mono';
