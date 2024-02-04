@@ -5,11 +5,13 @@
 	import { Tile } from './puzzle';
 
 	export let tile: Tile;
+	let isTileSelected = false;
 	let isRowSelected = false;
 	let isColumnSelected = false;
 	let isSquareSelected = false;
 
 	store.subscribe((value: number) => {
+		isTileSelected = false;
 		isRowSelected = false;
 		isColumnSelected = false;
 		isSquareSelected = false;
@@ -19,6 +21,8 @@
 		}
 
 		if (tile.index == value) {
+			isTileSelected = true;
+
 			return;
 		}
 
@@ -74,6 +78,7 @@
 
 <div
 	class="grid-element"
+	class:is-tile-selected={isTileSelected}
 	class:correct={tile.isCorrect}
 	class:is-row-selected={isRowSelected}
 	class:is-column-selected={isColumnSelected}
@@ -93,6 +98,7 @@
 			min="1"
 			max="9"
 			on:keyup={select}
+			on:keydown={unselect}
 			bind:value={tile.current}
 		/>
 	{:else}
@@ -129,7 +135,7 @@
 			background-color: turquoise;
 		}
 
-		&:hover {
+		&.is-tile-selected {
 			background-color: green;
 		}
 
