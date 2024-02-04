@@ -98,7 +98,6 @@
 			min="1"
 			max="9"
 			on:keyup={select}
-			on:keydown={unselect}
 			bind:value={tile.current}
 		/>
 	{:else}
