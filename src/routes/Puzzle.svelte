@@ -6,6 +6,10 @@
 	let startingBoard = puzzle.board;
 
 	let state = startingBoard;
+
+	function recordState(): void {
+		history.pushState({}, 'next page', `?${puzzle.toHash}`);
+	}
 </script>
 
 <svelte:head>
@@ -14,7 +18,7 @@
 
 <div class="puzzle">
 	{#each state as value}
-		<Tile bind:tile={value} />
+		<Tile bind:tile={value} on:numberChanged={recordState} />
 	{/each}
 
 	{#if puzzle.isCorrect}

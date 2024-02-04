@@ -1,10 +1,14 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { store, DEFAULT_VALUE } from './indexStore';
 	import lodash from 'lodash';
 	const { floor } = lodash;
 	import { Tile } from './puzzle';
 
 	export let tile: Tile;
+
+	const dispatch = createEventDispatcher();
+
 	let isTileSelected = false;
 	let isRowSelected = false;
 	let isColumnSelected = false;
@@ -97,6 +101,7 @@
 			class:correct={tile.isCorrect}
 			min="1"
 			max="9"
+			on:input={() => dispatch('numberChanged')}
 			on:keyup={select}
 			bind:value={tile.current}
 		/>

@@ -1,5 +1,10 @@
 import lodash from 'lodash';
-const { toNumber } = lodash;
+const { toNumber, padStart } = lodash;
+
+import sha256 from 'crypto-js/sha256';
+import hmacSHA512 from 'crypto-js/hmac-sha512';
+import Base64 from 'crypto-js/enc-base64';
+
 import sudokuJs from './sudokujs/index';
 
 export class Tile {
@@ -32,6 +37,14 @@ export class Tile {
 	get isCorrect(): boolean {
 		return this.currentValue != null && this.currentValue == this.correct;
 	}
+
+	get toHash(): string {
+		if (this.currentValue?.toString() == 'NaN') {
+			return `${padStart(this.index.toString(), 2, '0')}0${this.correct}`;
+		}
+
+		return `${padStart(this.index.toString(), 2, '0')}${this.currentValue}${this.correct}`;
+	}
 }
 
 export class OriginalTile extends Tile {
@@ -59,6 +72,30 @@ export class Puzzle {
 		}
 
 		return true;
+	}
+
+	get toHash(): string {
+		const raw = this.board.map((tile) => tile.toHash).join('\n');
+		//
+		// const result = atob(raw);
+
+		const result = this.bytesToBase64(new TextEncoder().encode(raw));
+		console.log(`Encoded string: [${result}]`);
+
+		return result;
+	}
+
+	base64ToBytes(base64: string): Uint8Array {
+		const binString = atob(base64);
+
+		return Uint8Array.from(binString, (m) => m.codePointAt(0) || 0);
+	}
+
+	// From https://developer.mozilla.org/en-US/docs/Glossary/Base64#the_unicode_problem.
+	bytesToBase64(bytes: Uint8Array): string {
+		const binString = String.fromCodePoint(...bytes);
+
+		return btoa(binString);
 	}
 }
 
