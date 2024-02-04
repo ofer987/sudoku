@@ -14,8 +14,14 @@
 
 <div class="puzzle">
 	{#each state as value}
-		<Tile tile={value} />
+		<Tile bind:tile={value} />
 	{/each}
+
+	{#if puzzle.isCorrect}
+		<div>Correct!</div>
+	{:else}
+		<div>Not correct yet!</div>
+	{/if}
 </div>
 
 <style lang="scss">

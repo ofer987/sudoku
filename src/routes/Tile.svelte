@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { store } from './indexStore';
+	import { store, DEFAULT_VALUE } from './indexStore';
 	import lodash from 'lodash';
 	const { floor } = lodash;
 	import { Tile } from './puzzle';
@@ -10,13 +10,17 @@
 	let isSquareSelected = false;
 
 	store.subscribe((value: number) => {
-		if (tile.index == value) {
-			return;
-		}
-
 		isRowSelected = false;
 		isColumnSelected = false;
 		isSquareSelected = false;
+
+		if (value == DEFAULT_VALUE) {
+			return;
+		}
+
+		if (tile.index == value) {
+			return;
+		}
 
 		const row = floor(value / 9);
 		const column = value % 9;
@@ -45,17 +49,14 @@
 				}
 			}
 		}
-		for (let j = column; j < 81; j += 9) {
-			if (tile.index == j) {
-				isColumnSelected = true;
-
-				break;
-			}
-		}
 	});
 
 	function select(): void {
 		store.set(tile.index);
+	}
+
+	function unselect(): void {
+		store.set(DEFAULT_VALUE);
 	}
 
 	function isInputElement(): boolean {
@@ -77,6 +78,8 @@
 	class:is-row-selected={isRowSelected}
 	class:is-column-selected={isColumnSelected}
 	class:is-square-selected={isSquareSelected}
+	on:blur={() => {}}
+	on:mouseout={unselect}
 	on:mouseover={select}
 	on:focus={select}
 	aria-level="1"

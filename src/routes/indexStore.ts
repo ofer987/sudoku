@@ -1,3 +1,4 @@
 import { writable } from 'svelte/store';
 
-export const store = writable(0);
+export const DEFAULT_VALUE = -1;
+export const store = writable(DEFAULT_VALUE);
