@@ -60,19 +60,15 @@ export class Puzzle {
 
 		return true;
 	}
-	//
-	// get answer(): number[] {
-	// 	return this.board.map((tile) => tile.correct);
-	// }
 }
 
 const getNumerValue = (value: number | string): number | null => {
-	if (typeof value == 'number' || typeof value == 'string') {
-		return toNumber(value);
-	}
-
 	if (value == null || value <= 0 || value > 9) {
 		return null;
+	}
+
+	if (typeof value == 'number' || typeof value == 'string') {
+		return toNumber(value);
 	}
 
 	return null;

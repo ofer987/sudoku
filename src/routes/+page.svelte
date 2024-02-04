@@ -12,17 +12,3 @@
 {#await puzzle then resolvedPuzzle}
 	<Puzzle puzzle={resolvedPuzzle} />
 {/await}
-
-<style lang="scss">
-	@import '@fontsource/fira-mono';
-
-	.puzzle {
-		font-family: 'Fira Mono';
-
-		display: grid;
-		grid-template-rows: 2em 2em 2em 2em 2em 2em 2em 2em 2em;
-		grid-template-columns: 2em 2em 2em 2em 2em 2em 2em 2em 2em;
-		align-items: center;
-		justify-items: center;
-	}
-</style>

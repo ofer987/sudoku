@@ -5,19 +5,9 @@
 	import { Tile } from './puzzle';
 
 	export let tile: Tile;
-	// export let isSelected;
-	const valueChoices = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-	// function setValue(newValue: number) {
-	// 	tile.current = newValue;
-	// }
-
-	// const store = writable(0);
 	let isRowSelected = false;
 	let isColumnSelected = false;
 	let isSquareSelected = false;
-
-	// let selectedIndex: number | null = null;
 
 	store.subscribe((value: number) => {
 		if (tile.index == value) {
@@ -30,19 +20,15 @@
 
 		const row = floor(value / 9);
 		const column = value % 9;
-		// alert(`Selected row is ${row}`);
 		for (let i = row * 9; i < (row + 1) * 9; i += 1) {
 			if (tile.index == i) {
-				// alert(`tile: ${tile.index} is selected too!`);
 				isRowSelected = true;
 				break;
 			}
 		}
 
-		// alert(`Selected column is ${column}`);
 		for (let j = column; j < 81; j += 9) {
 			if (tile.index == j) {
-				// alert(`tile: ${tile.index} is selected too!`);
 				isColumnSelected = true;
 				break;
 			}
@@ -54,24 +40,21 @@
 			for (let j = squareColumnStart; j < squareColumnStart + 3; j += 1) {
 				if (tile.index == i * 9 + j) {
 					isSquareSelected = true;
+
 					break;
 				}
 			}
 		}
 		for (let j = column; j < 81; j += 9) {
 			if (tile.index == j) {
-				// alert(`tile: ${tile.index} is selected too!`);
 				isColumnSelected = true;
+
 				break;
 			}
 		}
 	});
-	// store.subscribe
 
 	function select(): void {
-		// alert(`selected: ${tile.index}`);
-		// alert(`Row is ${floor(tile.index / 9)}`);
-		// alert(`Column is ${tile.index % 9}`);
 		store.set(tile.index);
 	}
 
@@ -86,20 +69,6 @@
 
 		return ' ';
 	}
-
-	const isCorrect = (): boolean => {
-		return tile.isCorrect;
-	};
-
-	$: isCorrect();
-
-	// const isSelected = () => {};
-	// let answer = puzzle.answer;
-	// let startingBoard = puzzle.board;
-	//
-	// let state = startingBoard;
-
-	// const puzzle = generateSudokuPuzzle();
 </script>
 
 <div
@@ -141,12 +110,7 @@
 		align-items: center;
 
 		&.correct {
-			/* background-color: black; */
 			background-color: lightblue;
-			/* border-top-width: 1em; */
-			/* border-bottom-width: 1em; */
-			/* border-left-width: 1em; */
-			/* border-right-width: 1em; */
 		}
 
 		&.is-row-selected {
@@ -171,11 +135,7 @@
 			font-size: 1em;
 
 			display: grid;
-			/* background-color: blue; */
 			color: red;
-
-			/* width: 4em; */
-			/* height: 4em; */
 
 			&.correct {
 				color: blue;
@@ -184,19 +144,6 @@
 			&.answer {
 				display: block;
 			}
-			/*  */
-			/* &:not(:hover) { */
-			/* 	display: block; */
-			/* } */
-		}
-
-		select {
-			width: 3em;
-			height: 2em;
-			/*  */
-			/* &.correct { */
-			/* 	color: blue; */
-			/* } */
 		}
 	}
 </style>
