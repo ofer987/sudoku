@@ -13,14 +13,20 @@
 	// }
 
 	// const store = writable(0);
-	let isSelected = false;
+	let isRowSelected = false;
+	let isColumnSelected = false;
+	let isSquareSelected = false;
 
 	// let selectedIndex: number | null = null;
 
 	store.subscribe((value: number) => {
-		isSelected = false;
-		// alert(value);
-		// selectedIndex = value;
+		if (tile.index == value) {
+			return;
+		}
+
+		isRowSelected = false;
+		isColumnSelected = false;
+		isSquareSelected = false;
 
 		const row = floor(value / 9);
 		const column = value % 9;
@@ -28,8 +34,8 @@
 		for (let i = row * 9; i < (row + 1) * 9; i += 1) {
 			if (tile.index == i) {
 				// alert(`tile: ${tile.index} is selected too!`);
-				isSelected = true;
-				// return;
+				isRowSelected = true;
+				break;
 			}
 		}
 
@@ -37,8 +43,26 @@
 		for (let j = column; j < 81; j += 9) {
 			if (tile.index == j) {
 				// alert(`tile: ${tile.index} is selected too!`);
-				isSelected = true;
-				// return;
+				isColumnSelected = true;
+				break;
+			}
+		}
+
+		const squareRowStart = floor(row / 3) * 3;
+		const squareColumnStart = floor(column / 3) * 3;
+		for (let i = squareRowStart; i < squareRowStart + 3; i += 1) {
+			for (let j = squareColumnStart; j < squareColumnStart + 3; j += 1) {
+				if (tile.index == i * 9 + j) {
+					isSquareSelected = true;
+					break;
+				}
+			}
+		}
+		for (let j = column; j < 81; j += 9) {
+			if (tile.index == j) {
+				// alert(`tile: ${tile.index} is selected too!`);
+				isColumnSelected = true;
+				break;
 			}
 		}
 	});
@@ -81,7 +105,9 @@
 <div
 	class="grid-element"
 	class:correct={tile.isCorrect}
-	class:is-selected={isSelected}
+	class:is-row-selected={isRowSelected}
+	class:is-column-selected={isColumnSelected}
+	class:is-square-selected={isSquareSelected}
 	on:mouseover={select}
 	on:focus={select}
 	aria-level="1"
@@ -123,8 +149,16 @@
 			/* border-right-width: 1em; */
 		}
 
-		&.is-selected {
+		&.is-row-selected {
 			background-color: grey;
+		}
+
+		&.is-column-selected {
+			background-color: grey;
+		}
+
+		&.is-square-selected {
+			background-color: turquoise;
 		}
 
 		&:hover {
