@@ -101,8 +101,14 @@
 			class:correct={tile.isCorrect}
 			min="1"
 			max="9"
-			on:input={() => dispatch('numberChanged')}
-			on:keyup={select}
+			on:mousedown={() => {
+				dispatch('numberChanged');
+				select();
+			}}
+			on:keydown={() => {
+				dispatch('numberChanged');
+				select();
+			}}
 			bind:value={tile.current}
 		/>
 	{:else}

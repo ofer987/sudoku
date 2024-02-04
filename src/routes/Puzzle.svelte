@@ -8,7 +8,7 @@
 	let state = startingBoard;
 
 	function recordState(): void {
-		history.pushState({}, 'next page', `?${puzzle.toHash}`);
+		history.pushState({}, 'next page', `#${puzzle.toHash}`);
 	}
 </script>
 

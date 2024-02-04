@@ -1,14 +1,30 @@
 <script lang="ts">
-	import { generateSudokuPuzzle } from './puzzle';
+	import { generatePuzzleFromBase64Hash, generateSudokuPuzzle } from './puzzle';
 	import Puzzle from './Puzzle.svelte';
 
-	const puzzle = generateSudokuPuzzle();
+	let puzzle: Puzzle | undefined;
+	// let awaitedPuzzle: Promise<Puzzle> | undefined;
+
+	if ($page.url.hash != '') {
+		puzzle = generatePuzzleFromBase64Hash($page.url.hash.substring(1));
+	}
+	// else {
+	// 	awaitedPuzzle = generateSudokuPuzzle();
+	// }
+
+	import { page } from '$app/stores';
+
+	console.log($page.url.hash);
 </script>
 
 <svelte:head>
 	<title>Dan's Sudoku (Puzzles generated using third-party library)</title>
 </svelte:head>
 
-{#await puzzle then resolvedPuzzle}
-	<Puzzle puzzle={resolvedPuzzle} />
-{/await}
+{#if typeof puzzle != 'undefined'}
+	<Puzzle {puzzle} />
+{:else}
+	{#await generateSudokuPuzzle() then resolvedPuzzle}
+		<Puzzle puzzle={resolvedPuzzle} />
+	{/await}
+{/if}
