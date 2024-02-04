@@ -92,6 +92,7 @@
 			class:correct={tile.isCorrect}
 			min="1"
 			max="9"
+			on:keyup={select}
 			bind:value={tile.current}
 		/>
 	{:else}
