@@ -1,0 +1,190 @@
+name: Deploy Website
+
+on:
+  push:
+    tags:
+      - 'releases/*'
+
+concurrency:
+  group: deploy-website
+  cancel-in-progress: true
+
+env:
+  USERNAME: 'cicd'
+  ROOT_USERNAME: 'root'
+  NGINX_USERNAME: 'cicd'
+  HTML_STATIC_PATH: '/var/www/sudo'
+  API_RELATIVE_PATH: 'api'
+  OFER_TO_DOMAIN: 'sudo.ism'
+  SERVER_RSA_PATH: 'rsa_ssh'
+  TLS_ENCRYPTION_PATH: '/etc/letsencrypt/live/sudo.ism'
+
+jobs:
+  create_directories:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/create_server_rsa_key
+        with:
+          PRIVATE_RSA_KEY_PATH: ${{ env.SERVER_RSA_PATH }}
+          PRIVATE_RSA_KEY_CONTENT: ${{ secrets.PROD_STATIC_SERVER_PRIVATE_KEY }}
+
+      - name: Create Static Directory
+        run: |
+          # In case the directory does not exist
+          set +e
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" rm -rf ${HTML_STATIC_PATH}
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" mkdir -p -- ${HTML_STATIC_PATH}
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" chown ${NGINX_USERNAME}:${NGINX_USERNAME} ${HTML_STATIC_PATH} -R
+
+          set -e
+
+      - name: Create TLS Directory
+        run: |
+          # In case the directory does not exist
+          set +e
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" rm -rf ${TLS_ENCRYPTION_PATH}
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" mkdir -p -- ${TLS_ENCRYPTION_PATH}
+
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" chown ${NGINX_USERNAME}:${NGINX_USERNAME} ${TLS_ENCRYPTION_PATH} -R
+
+          set -e
+
+  build_and_deploy_static:
+    needs: ['create_directories']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/create_server_rsa_key
+        with:
+          PRIVATE_RSA_KEY_PATH: ${{ env.SERVER_RSA_PATH }}
+          PRIVATE_RSA_KEY_CONTENT: ${{ secrets.CICD_SERVER_PRIVATE_KEY }}
+
+      - name: Install Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.17'
+
+      - name: Compile
+        working-directory: ./static
+        run: |
+          yarn && yarn build
+
+      - name: Deploy
+        working-directory: ./static/build
+        run: |
+          scp \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i "../../${SERVER_RSA_PATH}" \
+            -r \
+            favicon.png \
+            robots.txt \
+            __data.json \
+            bootstrap.bundle.min.js.map \
+            bootstrap.bundle.min.js \
+            main.jpg \
+            index.html \
+            _app \
+            "${NGINX_USERNAME}@${OFER_TO_DOMAIN}:${HTML_STATIC_PATH}"
+
+  setup_nginx:
+    needs: ['build_and_deploy_static']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/create_server_rsa_key
+        with:
+          PRIVATE_RSA_KEY_PATH: ${{ env.SERVER_RSA_PATH }}
+          PRIVATE_RSA_KEY_CONTENT: ${{ secrets.CICD_SERVER_PRIVATE_KEY }}
+
+      - name: Deploy TLS Certificate and Private Key
+        run: |
+          echo "${TLS_CERTIFICATE}" > ${TLS_CERTIFICATE_FILENAME}
+          echo "${TLS_PRIVATE_KEY}" > ${TLS_PRIVATE_KEY_FILENAME}
+
+          scp \
+            -r \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${TLS_CERTIFICATE_FILENAME}" "${TLS_PRIVATE_KEY_FILENAME}" "${NGINX_USERNAME}@${OFER_TO_DOMAIN}:${TLS_ENCRYPTION_PATH}"
+        env:
+          TLS_PRIVATE_KEY: ${{ secrets.PROD_TLS_CERTIFICATE_PRIVATE_KEY }}
+          TLS_CERTIFICATE: ${{ secrets.PROD_TLS_CERTIFICATE }}
+          TLS_PRIVATE_KEY_FILENAME: './sudo.ism.private.pem'
+          TLS_CERTIFICATE_FILENAME: './star_sudo.ism.crt'
+
+      - name: Deploy NGINX Confs
+        working-directory: ./nginx_confs
+        run: |
+          echo "${DH_PARAM_CONTENT}" > "${DH_PARAM_FILENAME}"
+
+          scp \
+            -r \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i "../${SERVER_RSA_PATH}" \
+            ./nginx.conf ./${DH_PARAM_FILENAME} ./sites-available ./nginxconfig.io "${NGINX_USERNAME}@${OFER_TO_DOMAIN}:/etc/nginx"
+        env:
+          DH_PARAM_CONTENT: ${{ secrets.DH_PARAM }}
+          DH_PARAM_FILENAME: 'dhparam.pem'
+
+      - name: Enable sites
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${NGINX_USERNAME}@${OFER_TO_DOMAIN}" ln -s "/etc/nginx/sites-available/sudo.ism.conf" /etc/nginx/sites-enabled/sudo.ism.conf
+
+  restart_nginx:
+    needs: ['setup_nginx']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/create_server_rsa_key
+        with:
+          PRIVATE_RSA_KEY_PATH: ${{ env.SERVER_RSA_PATH }}
+          PRIVATE_RSA_KEY_CONTENT: ${{ secrets.PROD_STATIC_SERVER_PRIVATE_KEY }}
+
+      - name: Restart NGINX
+        run: |
+          ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -i ${SERVER_RSA_PATH} \
+            "${ROOT_USERNAME}@${OFER_TO_DOMAIN}" systemctl restart nginx

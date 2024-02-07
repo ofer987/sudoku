@@ -1,0 +1,46 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - 'master'
+
+concurrency:
+  group: ci-pipeline
+  cancel-in-progress: false
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OFER_TO_GITHUB_SECRET }}
+          fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+      - run: |
+          gem install --no-document --version 7.0.4.3 activesupport
+          gem install --no-document --version 1.0.1 semver
+
+      - name: Increment MINOR Version
+        run: |
+          VERSION=$(.github/ruby_scripts/print_next_patched_version)
+          echo "VERSION=${VERSION}" >> ${GITHUB_ENV}
+
+      - name: Create a New Tag
+        run: |
+          TAG_NAME="releases/${VERSION}"
+
+          git tag ${TAG_NAME}
+          git push --tags origin
+
+          echo "::notice::${TAG_NAME} has been successfully created"
+
+      - name: Failed to Create a New Tag
+        if: ${{ failure() }}
+        run: |
+          echo '::error::Failed to create a new tag'
