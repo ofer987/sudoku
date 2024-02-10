@@ -4,6 +4,7 @@
 
 	export let puzzle: Puzzle;
 	let startingBoard = puzzle.board;
+	let isBeginnerMode = true;
 
 	let state = startingBoard;
 
@@ -27,9 +28,14 @@
 	}
 </script>
 
+<div class="beginner-mode">
+	<input id="beginner-mode-value" type="checkbox" bind:checked={isBeginnerMode} />
+	<label for="beginner-mode-value">Beginner Mode</label>
+</div>
+
 <div class="puzzle">
 	{#each state as value}
-		<Tile bind:tile={value} on:numberChanged={recordState} />
+		<Tile bind:tile={value} on:numberChanged={recordState} {isBeginnerMode} />
 	{/each}
 </div>
 
@@ -53,8 +59,13 @@
 		grid-gap: 1em;
 		grid-template-rows: 4em 4em 4em 4em 4em 4em 4em 4em 4em;
 		grid-template-columns: 4em 4em 4em 4em 4em 4em 4em 4em 4em;
-		/* align-items: center; */
 		justify-items: center;
+	}
+
+	.beginner-mode {
+		display: flex;
+		gap: 0.5em;
+		width: 44em;
 	}
 
 	.state {

@@ -6,6 +6,7 @@
 	import { Tile } from './puzzle';
 
 	export let tile: Tile;
+	export let isBeginnerMode: boolean;
 
 	const dispatch = createEventDispatcher();
 
@@ -98,7 +99,7 @@
 		<input
 			class="tile"
 			type="number"
-			class:correct={tile.isCorrect}
+			class:correct={isBeginnerMode && tile.isCorrect}
 			min="1"
 			max="9"
 			on:mouseup={() => {
