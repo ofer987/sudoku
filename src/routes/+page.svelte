@@ -23,6 +23,9 @@
 
 <body>
 	<div class="container">
+		<h1>
+			Sudo<s>ku</s>
+		</h1>
 		{#if typeof puzzle != 'undefined'}
 			<Puzzle {puzzle} />
 		{:else}
