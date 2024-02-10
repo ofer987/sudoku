@@ -1,10 +1,6 @@
 import lodash from 'lodash';
 const { toNumber, padStart } = lodash;
 
-import sha256 from 'crypto-js/sha256';
-import hmacSHA512 from 'crypto-js/hmac-sha512';
-import Base64 from 'crypto-js/enc-base64';
-
 import sudokuJs from './sudokujs/index';
 
 export class Tile {
@@ -83,7 +79,7 @@ export class Puzzle {
 		const raw = this.board.map((tile) => tile.toHash).join('\n');
 
 		const result = bytesToBase64(new TextEncoder().encode(raw));
-		console.log(`Encoded string: (${result})`);
+		// console.log(`Encoded string: (${result})`);
 
 		return result;
 	}
@@ -136,7 +132,7 @@ export const generateSudokuPuzzle = async (): Promise<Puzzle> => {
 };
 
 export const generateTileFromHash = (hash: string): Tile => {
-	console.log(hash);
+	// console.log(hash);
 
 	const parameters = hash.split(',');
 

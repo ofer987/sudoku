@@ -101,11 +101,11 @@
 			class:correct={tile.isCorrect}
 			min="1"
 			max="9"
-			on:mousedown={() => {
+			on:mouseup={() => {
 				dispatch('numberChanged');
 				select();
 			}}
-			on:keydown={() => {
+			on:keyup={() => {
 				dispatch('numberChanged');
 				select();
 			}}

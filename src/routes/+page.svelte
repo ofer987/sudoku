@@ -21,10 +21,29 @@
 	<title>Dan's Sudoku (Puzzles generated using third-party library)</title>
 </svelte:head>
 
-{#if typeof puzzle != 'undefined'}
-	<Puzzle {puzzle} />
-{:else}
-	{#await generateSudokuPuzzle() then resolvedPuzzle}
-		<Puzzle puzzle={resolvedPuzzle} />
-	{/await}
-{/if}
+<body>
+	<div class="container">
+		{#if typeof puzzle != 'undefined'}
+			<Puzzle {puzzle} />
+		{:else}
+			{#await generateSudokuPuzzle() then resolvedPuzzle}
+				<Puzzle puzzle={resolvedPuzzle} />
+			{/await}
+		{/if}
+	</div>
+</body>
+
+<style lang="scss">
+	@import '@fontsource/fira-mono';
+
+	body {
+		font-family: 'Fira Mono';
+
+		.container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+	}
+</style>
