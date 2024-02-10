@@ -23,6 +23,7 @@
 		const url = window.location.toString();
 
 		await navigator.clipboard.writeText(url);
+		alert('Copied URL to Clipboard');
 	}
 </script>
 
@@ -33,7 +34,8 @@
 </div>
 
 <div class="state">
-	<input id="value" value={pageUrl} disabled={true} />
+	<label for="value">Restart from here:<br /></label>
+	<input id="value" value={pageUrl} type="text" disabled={true} />
 	<input id="button" type="button" value="copy" on:click={copyUrlToClipboard} />
 </div>
 
@@ -61,7 +63,7 @@
 		width: 44em;
 
 		#value {
-			width: 80%;
+			width: 70%;
 		}
 	}
 </style>
