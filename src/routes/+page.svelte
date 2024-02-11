@@ -42,4 +42,40 @@
 			flex-direction: column;
 		}
 	}
+
+	@media screen and (max-width: 1000px) {
+		body {
+			font-size: 16px;
+		}
+	}
+
+	@media screen and (max-width: 900px) {
+		body {
+			font-size: 14px;
+		}
+	}
+
+	@media screen and (max-width: 800px) {
+		body {
+			font-size: 12px;
+		}
+	}
+
+	@media screen and (max-width: 700px) {
+		body {
+			font-size: 10px;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		body {
+			font-size: 8px;
+		}
+	}
+
+	@media screen and (max-width: 500px) {
+		body {
+			font-size: 6px;
+		}
+	}
 </style>
