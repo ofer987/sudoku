@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { Puzzle } from './puzzle';
 	import Tile from './Tile.svelte';
+	import NewGame from './NewGame.svelte';
 
 	export let puzzle: Puzzle;
+	let isNewGameDisplayed = false;
 	let startingBoard = puzzle.board;
 	let isBeginnerMode = true;
 	let copyText: 'copy' | 'copied' = 'copy';
@@ -40,20 +42,18 @@
 	}
 
 	function startNewGame(): void {
-		pageId += 1;
-		console.log(`Page Id is ${pageId}`);
-
-		const pathname = '/';
-		history.pushState({ pageId: pageId, url: pathname }, '', pathname);
-		pageUrl = window.location.toString();
-		isCopyButtonEnabled = true;
-		window.location.pathname = pathname;
+		isNewGameDisplayed = true;
 	}
 </script>
 
-<div class="container">
+<div class="container" class:is-disabled={isNewGameDisplayed}>
 	<div class="beginner-mode">
-		<input id="beginner-mode-value" type="checkbox" bind:checked={isBeginnerMode} />
+		<input
+			id="beginner-mode-value"
+			type="checkbox"
+			bind:checked={isBeginnerMode}
+			disabled={isNewGameDisplayed}
+		/>
 		<label for="beginner-mode-value">Beginner Mode</label>
 	</div>
 
@@ -68,22 +68,43 @@
 
 <div class="puzzle">
 	{#each state as value}
-		<Tile bind:tile={value} on:numberChanged={recordState} {isBeginnerMode} />
+		<Tile
+			bind:tile={value}
+			on:numberChanged={recordState}
+			{isBeginnerMode}
+			disabled={isNewGameDisplayed}
+		/>
 	{/each}
 </div>
 
 <div class="state">
 	<label for="value">Restart from here:</label>
 	<div class="container">
-		<button type="button" id="value" on:click={copyUrlToClipboard}>{pageUrl}</button>
+		<button type="button" id="value" on:click={copyUrlToClipboard} disabled={isNewGameDisplayed}
+			>{pageUrl}</button
+		>
 	</div>
-	<input id="button" type="button" value={copyText} on:click={copyUrlToClipboard} />
+	<input
+		id="button"
+		type="button"
+		value={copyText}
+		on:click={copyUrlToClipboard}
+		disabled={isNewGameDisplayed}
+	/>
 </div>
 
 <div class="new-game">
 	<label for="start-new-game">Start a new Game:</label>
-	<input id="start-new-game" type="button" on:click={startNewGame} value="New Game" />
+	<input
+		id="start-new-game"
+		type="button"
+		on:click={startNewGame}
+		disabled={isNewGameDisplayed}
+		value="New Game"
+	/>
 </div>
+
+<NewGame bind:isDisplayed={isNewGameDisplayed} />
 
 <style lang="scss">
 	.puzzle {

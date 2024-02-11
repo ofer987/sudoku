@@ -8,6 +8,7 @@
 
 	export let tile: Tile;
 	export let isBeginnerMode: boolean;
+	export let disabled = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -84,11 +85,11 @@
 
 <div
 	class="grid-element"
-	class:is-tile-selected={isTileSelected}
+	class:is-tile-selected={!disabled && isTileSelected}
 	class:correct={tile.isCorrect}
-	class:is-row-selected={isRowSelected}
-	class:is-column-selected={isColumnSelected}
-	class:is-square-selected={isSquareSelected}
+	class:is-row-selected={!disabled && isRowSelected}
+	class:is-column-selected={!disabled && isColumnSelected}
+	class:is-square-selected={!disabled && isSquareSelected}
 	on:blur={() => {}}
 	on:mouseout={unselect}
 	on:mouseover={select}
@@ -112,6 +113,7 @@
 				select();
 			}}
 			bind:value={tile.current}
+			{disabled}
 		/>
 	{:else}
 		<div class="tile answer" class:correct={tile.isCorrect}>
@@ -121,8 +123,6 @@
 </div>
 
 <style lang="scss">
-	@import '@fontsource/fira-mono';
-
 	.grid-element {
 		width: 100%;
 		height: 100%;
