@@ -70,7 +70,7 @@
 	}
 
 	function isInputElement(): boolean {
-		return !tile.isOriginal;
+		return !tile.isAnswered;
 	}
 
 	function displayedValue(): string {

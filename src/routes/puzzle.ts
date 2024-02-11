@@ -1,6 +1,6 @@
 import lodash from 'lodash';
 import { base64ToBytes, bytesToBase64 } from './utils';
-import { Tile, OriginalTile, generateTileFromHash } from './tile';
+import { Tile, AnsweredTile, generateTileFromHash } from './tile';
 const { toNumber } = lodash;
 
 import sudokuJs from './sudokujs/index';
@@ -54,7 +54,7 @@ export const generateSudokuPuzzle = async (): Promise<Puzzle> => {
 		const answerValue = getNumericValue(answer[i]);
 
 		if (boardValue && answerValue && boardValue == answerValue) {
-			tiles.push(new OriginalTile(i, boardValue, toNumber(puzzle.answer[i])));
+			tiles.push(new AnsweredTile(i, boardValue, toNumber(puzzle.answer[i])));
 		} else {
 			tiles.push(new Tile(i, boardValue, toNumber(puzzle.answer[i])));
 		}

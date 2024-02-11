@@ -24,7 +24,7 @@ export class Tile {
 		this.currentValue = value;
 	}
 
-	get isOriginal(): boolean {
+	get isAnswered(): boolean {
 		return false;
 	}
 
@@ -33,21 +33,21 @@ export class Tile {
 	}
 
 	get toHash(): string {
-		let isOriginalString = 'F';
-		if (this.isOriginal) {
-			isOriginalString = 'T';
+		let isAnsweredString = 'F';
+		if (this.isAnswered) {
+			isAnsweredString = 'T';
 		}
 
 		if (this.currentValue?.toString() == 'NaN') {
-			return `${isOriginalString},${padStart(this.index.toString(), 2, '0')},0,${this.correct}`;
+			return `${isAnsweredString},${padStart(this.index.toString(), 2, '0')},0,${this.correct}`;
 		}
 
-		return `${isOriginalString},${padStart(this.index.toString(), 2, '0')},${this.currentValue},${this.correct}`;
+		return `${isAnsweredString},${padStart(this.index.toString(), 2, '0')},${this.currentValue},${this.correct}`;
 	}
 }
 
-export class OriginalTile extends Tile {
-	public get isOriginal(): boolean {
+export class AnsweredTile extends Tile {
+	public get isAnswered(): boolean {
 		return true;
 	}
 
@@ -61,7 +61,7 @@ export const generateTileFromHash = (hash: string): Tile => {
 
 	const parameters = hash.split(',');
 
-	const isOriginal = parameters[0];
+	const isAnswered = parameters[0];
 	const index = toNumber(parameters[1]);
 	const thirdQuestion = toNumber(parameters[2]);
 
@@ -74,8 +74,8 @@ export const generateTileFromHash = (hash: string): Tile => {
 
 	const correctValue = toNumber(parameters[3]);
 
-	if (isOriginal == 'T') {
-		return new OriginalTile(index, currentValue, correctValue);
+	if (isAnswered == 'T') {
+		return new AnsweredTile(index, currentValue, correctValue);
 	}
 	return new Tile(index, currentValue, correctValue);
 };
