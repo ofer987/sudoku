@@ -104,6 +104,7 @@
 			class:correct={isBeginnerMode && tile.isCorrect}
 			min="1"
 			max="9"
+			inputmode="numeric"
 			on:mouseup={() => {
 				dispatch('numberChanged');
 				select();
