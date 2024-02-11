@@ -5,11 +5,20 @@
 	export let puzzle: Puzzle;
 	let startingBoard = puzzle.board;
 	let isBeginnerMode = true;
+	let copiedText: 'copy' | 'copied' = 'copy';
+	let isCopyButtonEnabled = true;
+
+	$: {
+		copiedText = 'copied';
+		if (isCopyButtonEnabled) {
+			copiedText = 'copy';
+		}
+	}
 
 	let state = startingBoard;
 
 	let pageId = 0;
-	$: pageUrl = window.location.toString();
+	let pageUrl = window.location.toString();
 
 	async function recordState(): Promise<void> {
 		pageId += 1;
@@ -18,19 +27,32 @@
 		const url = `#${puzzle.toHash}`;
 		history.pushState({ pageId: pageId, url: url }, '', url);
 		pageUrl = window.location.toString();
+		isCopyButtonEnabled = true;
 	}
 
 	async function copyUrlToClipboard(): Promise<void> {
 		const url = window.location.toString();
 
 		await navigator.clipboard.writeText(url);
+		isCopyButtonEnabled = false;
+
 		alert('Copied URL to Clipboard');
 	}
 </script>
 
-<div class="beginner-mode">
-	<input id="beginner-mode-value" type="checkbox" bind:checked={isBeginnerMode} />
-	<label for="beginner-mode-value">Beginner Mode</label>
+<div class="container">
+	<div class="beginner-mode">
+		<input id="beginner-mode-value" type="checkbox" bind:checked={isBeginnerMode} />
+		<label for="beginner-mode-value">Beginner Mode</label>
+	</div>
+
+	<div class="results">
+		{#if puzzle.isCorrect}
+			<div class="message">Correct!</div>
+		{:else}
+			<div class="message">Not correct yet!</div>
+		{/if}
+	</div>
 </div>
 
 <div class="puzzle">
@@ -41,16 +63,10 @@
 
 <div class="state">
 	<label for="value">Restart from here:<br /></label>
-	<input id="value" value={pageUrl} type="text" disabled={true} />
-	<input id="button" type="button" value="copy" on:click={copyUrlToClipboard} />
-</div>
-
-<div class="results">
-	{#if puzzle.isCorrect}
-		<div>Correct!</div>
-	{:else}
-		<div>Not correct yet!</div>
-	{/if}
+	<div class="container">
+		<button type="button" id="value" on:click={copyUrlToClipboard}>{pageUrl}</button>
+	</div>
+	<input id="button" type="button" value={copiedText} on:click={copyUrlToClipboard} />
 </div>
 
 <style lang="scss">
@@ -62,10 +78,24 @@
 		justify-items: center;
 	}
 
-	.beginner-mode {
-		display: flex;
-		gap: 0.5em;
+	.container {
 		width: 44em;
+		display: flex;
+		flex-direction: row;
+
+		.beginner-mode {
+			display: flex;
+			gap: 0.5em;
+			width: 44em;
+		}
+
+		.results {
+			width: 20em;
+
+			.message {
+				float: right;
+			}
+		}
 	}
 
 	.state {
@@ -73,8 +103,22 @@
 		justify-content: space-between;
 		width: 44em;
 
-		#value {
-			width: 70%;
+		input#button {
+			/* padding: 0 2em; */
+			/* width: 10em; */
+			font-size: 0.5em;
+		}
+
+		.container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: 28em;
+			overflow: hidden;
+
+			#value {
+				font-size: 0.75em;
+			}
 		}
 	}
 </style>
