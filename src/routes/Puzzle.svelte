@@ -38,6 +38,17 @@
 
 		alert('Copied URL to Clipboard');
 	}
+
+	function startNewGame(): void {
+		pageId += 1;
+		console.log(`Page Id is ${pageId}`);
+
+		const pathname = '/';
+		history.pushState({ pageId: pageId, url: pathname }, '', pathname);
+		pageUrl = window.location.toString();
+		isCopyButtonEnabled = true;
+		window.location.pathname = pathname;
+	}
 </script>
 
 <div class="container">
@@ -62,11 +73,15 @@
 </div>
 
 <div class="state">
-	<label for="value">Restart from here:<br /></label>
+	<label for="value">Restart from here:</label>
 	<div class="container">
 		<button type="button" id="value" on:click={copyUrlToClipboard}>{pageUrl}</button>
 	</div>
 	<input id="button" type="button" value={copiedText} on:click={copyUrlToClipboard} />
+
+<div class="new-game">
+	<label for="start-new-game">Start a new Game:</label>
+	<input id="start-new-game" type="button" on:click={startNewGame} value="New Game" />
 </div>
 
 <style lang="scss">
@@ -119,6 +134,16 @@
 			#value {
 				font-size: 0.75em;
 			}
+		}
+	}
+
+	.new-game {
+		display: flex;
+		justify-content: left;
+		width: 44em;
+
+		label {
+			padding-right: 2em;
 		}
 	}
 </style>
