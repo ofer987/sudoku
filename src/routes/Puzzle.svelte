@@ -5,13 +5,13 @@
 	export let puzzle: Puzzle;
 	let startingBoard = puzzle.board;
 	let isBeginnerMode = true;
-	let copiedText: 'copy' | 'copied' = 'copy';
+	let copyText: 'copy' | 'copied' = 'copy';
 	let isCopyButtonEnabled = true;
 
 	$: {
-		copiedText = 'copied';
+		copyText = 'copied';
 		if (isCopyButtonEnabled) {
-			copiedText = 'copy';
+			copyText = 'copy';
 		}
 	}
 
@@ -77,7 +77,8 @@
 	<div class="container">
 		<button type="button" id="value" on:click={copyUrlToClipboard}>{pageUrl}</button>
 	</div>
-	<input id="button" type="button" value={copiedText} on:click={copyUrlToClipboard} />
+	<input id="button" type="button" value={copyText} on:click={copyUrlToClipboard} />
+</div>
 
 <div class="new-game">
 	<label for="start-new-game">Start a new Game:</label>
