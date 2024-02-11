@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let isDisplayed = false;
+	export let disabled = false;
 
 	type difficulty = 1 | 2 | 3 | 4;
 
@@ -35,7 +35,7 @@
 	}
 
 	function cancel(): void {
-		isDisplayed = false;
+		disabled = true;
 	}
 
 	function cancelOnKeydown(e: KeyboardEvent): void {
@@ -51,7 +51,7 @@
 <div
 	id="new-game"
 	class="container"
-	class:is-displayed={isDisplayed}
+	class:disabled
 	on:keydown={cancelOnKeydown}
 	role="menu"
 	tabindex="0"
@@ -78,33 +78,36 @@
 
 <style lang="scss">
 	.container {
-		z-index: 9000;
-		display: none;
-		width: 30em;
-		height: 20em;
-		justify-content: space-evenly;
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		background-color: white;
+		padding: 2em;
+		border-style: solid;
+		border-color: black;
+		border-width: 0.25em;
 
-		&.is-displayed {
+		&.disabled {
+			z-index: 9000;
+			display: none;
+			width: 30em;
+			height: 20em;
+			justify-content: space-evenly;
+		}
+
+		.levels {
 			display: flex;
-			flex-direction: column;
-			position: fixed;
-			background-color: white;
-			padding: 2em;
+			flex-direction: row;
+			justify-content: space-between;
+		}
 
-			.levels {
-				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
-			}
+		.cancel-container {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
 
-			.cancel-container {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-
-				.cancel {
-					width: 20em;
-				}
+			.cancel {
+				width: 20em;
 			}
 		}
 	}

@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { generatePuzzleFromBase64Hash, generateSudokuPuzzle } from './puzzle';
 	import Puzzle from './Puzzle.svelte';
+	import NewGame from './NewGame.svelte';
 	import { page } from '$app/stores';
 
 	let puzzle: Puzzle | undefined;
+	let isNewGameMenuDisabled = true;
 
 	if ($page.url.hash != '') {
 		puzzle = generatePuzzleFromBase64Hash($page.url.hash.substring(1));
+	}
+
+	function startNewGame(): void {
+		isNewGameMenuDisabled = false;
 	}
 </script>
 
@@ -20,12 +26,25 @@
 			sudo<s>ku</s>
 		</h1>
 		{#if typeof puzzle != 'undefined'}
-			<Puzzle {puzzle} />
+			<Puzzle {puzzle} disabled={!isNewGameMenuDisabled} />
 		{:else}
 			{#await generateSudokuPuzzle() then resolvedPuzzle}
-				<Puzzle puzzle={resolvedPuzzle} />
+				<Puzzle puzzle={resolvedPuzzle} disabled={!isNewGameMenuDisabled} />
 			{/await}
 		{/if}
+
+		<div class="new-game">
+			<label for="start-new-game">Start a new Game:</label>
+			<input
+				id="start-new-game"
+				type="button"
+				on:click={startNewGame}
+				disabled={!isNewGameMenuDisabled}
+				value="New Game"
+			/>
+		</div>
+
+		<NewGame bind:disabled={isNewGameMenuDisabled} />
 	</div>
 </body>
 
@@ -40,6 +59,16 @@
 			align-items: center;
 			justify-content: center;
 			flex-direction: column;
+
+			.new-game {
+				display: flex;
+				justify-content: left;
+				width: 44em;
+
+				label {
+					padding-right: 2em;
+				}
+			}
 		}
 	}
 

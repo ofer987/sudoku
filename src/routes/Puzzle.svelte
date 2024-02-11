@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { Puzzle } from './puzzle';
 	import Tile from './Tile.svelte';
-	import NewGame from './NewGame.svelte';
 
 	export let puzzle: Puzzle;
-	let isNewGameDisplayed = false;
+	export let disabled = false;
 	let startingBoard = puzzle.board;
 	let isBeginnerMode = true;
 	let copyText: 'copy' | 'copied' = 'copy';
@@ -40,20 +39,11 @@
 
 		alert('Copied URL to Clipboard');
 	}
-
-	function startNewGame(): void {
-		isNewGameDisplayed = true;
-	}
 </script>
 
-<div class="container" class:is-disabled={isNewGameDisplayed}>
+<div class="container">
 	<div class="beginner-mode">
-		<input
-			id="beginner-mode-value"
-			type="checkbox"
-			bind:checked={isBeginnerMode}
-			disabled={isNewGameDisplayed}
-		/>
+		<input id="beginner-mode-value" type="checkbox" bind:checked={isBeginnerMode} {disabled} />
 		<label for="beginner-mode-value">Beginner Mode</label>
 	</div>
 
@@ -68,43 +58,17 @@
 
 <div class="puzzle">
 	{#each state as value}
-		<Tile
-			bind:tile={value}
-			on:numberChanged={recordState}
-			{isBeginnerMode}
-			disabled={isNewGameDisplayed}
-		/>
+		<Tile bind:tile={value} on:numberChanged={recordState} {isBeginnerMode} {disabled} />
 	{/each}
 </div>
 
 <div class="state">
 	<label for="value">Restart from here:</label>
 	<div class="container">
-		<button type="button" id="value" on:click={copyUrlToClipboard} disabled={isNewGameDisplayed}
-			>{pageUrl}</button
-		>
+		<button type="button" id="value" on:click={copyUrlToClipboard} {disabled}>{pageUrl}</button>
 	</div>
-	<input
-		id="button"
-		type="button"
-		value={copyText}
-		on:click={copyUrlToClipboard}
-		disabled={isNewGameDisplayed}
-	/>
+	<input id="button" type="button" value={copyText} on:click={copyUrlToClipboard} {disabled} />
 </div>
-
-<div class="new-game">
-	<label for="start-new-game">Start a new Game:</label>
-	<input
-		id="start-new-game"
-		type="button"
-		on:click={startNewGame}
-		disabled={isNewGameDisplayed}
-		value="New Game"
-	/>
-</div>
-
-<NewGame bind:isDisplayed={isNewGameDisplayed} />
 
 <style lang="scss">
 	.puzzle {
@@ -140,12 +104,6 @@
 		justify-content: space-between;
 		width: 44em;
 
-		input#button {
-			/* padding: 0 2em; */
-			/* width: 10em; */
-			font-size: 0.5em;
-		}
-
 		.container {
 			display: flex;
 			flex-direction: column;
@@ -156,16 +114,6 @@
 			#value {
 				font-size: 0.75em;
 			}
-		}
-	}
-
-	.new-game {
-		display: flex;
-		justify-content: left;
-		width: 44em;
-
-		label {
-			padding-right: 2em;
 		}
 	}
 </style>
