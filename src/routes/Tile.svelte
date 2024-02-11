@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { store, DEFAULT_VALUE } from './indexStore';
+	import { Tile } from './tile';
+
 	import lodash from 'lodash';
 	const { floor } = lodash;
-	import { Tile } from './puzzle';
 
 	export let tile: Tile;
 	export let isBeginnerMode: boolean;
