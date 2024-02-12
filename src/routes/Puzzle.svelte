@@ -63,7 +63,7 @@
 </div>
 
 <div class="state">
-	<label for="value">Restart from here:</label>
+	<label for="value">Copy link to continue later:</label>
 	<div class="container">
 		<button type="button" id="value" on:click={copyUrlToClipboard} {disabled}>{pageUrl}</button>
 	</div>
@@ -104,14 +104,25 @@
 		justify-content: space-between;
 		width: 44em;
 
+		label {
+			width: 17em;
+		}
+
+		/* input { */
+		/* 	padding-left: 2em; */
+		/* } */
+
 		.container {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			width: 28em;
-			overflow: hidden;
+			/* line-height: 1em; */
+			width: 20em;
+			/* overflow: hidden; */
+			padding-right: 2em;
 
 			#value {
+				overflow: hidden;
 				font-size: 0.75em;
 			}
 		}

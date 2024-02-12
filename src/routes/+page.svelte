@@ -62,12 +62,12 @@
 
 			.new-game {
 				display: flex;
-				justify-content: left;
+				justify-content: space-between;
 				width: 44em;
 
-				label {
-					padding-right: 2em;
-				}
+				/* label { */
+				/* 	padding-right: 7em; */
+				/* } */
 			}
 		}
 	}

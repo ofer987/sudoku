@@ -44,7 +44,7 @@ const getNumericValue = (value: number | string): number | null => {
 };
 
 export const generateSudokuPuzzle = async (): Promise<Puzzle> => {
-	const puzzle = await sudokuJs(1);
+	const puzzle = await sudokuJs(4);
 
 	const tiles: Tile[] = [];
 	const board = puzzle.getBoard('array');
