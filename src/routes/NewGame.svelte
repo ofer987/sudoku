@@ -1,11 +1,12 @@
 <script lang="ts">
 	export let disabled = false;
+	import { DIFFUCLTY_LEVEL_SEARCH_PARAM } from './puzzle';
 
-	type difficulty = 1 | 2 | 3 | 4;
+	type difficultyLevel = 1 | 2 | 3 | 4;
 
 	interface Level {
 		name: string;
-		level: difficulty;
+		level: difficultyLevel;
 	}
 
 	const levels: Level[] = [
@@ -27,11 +28,14 @@
 		}
 	];
 
-	function startNewGame(): void {
-		console.log('hello');
-		const url = '/';
+	function startNewGame(level: difficultyLevel): void {
+		const pathname = '/';
+		const searchParams = `${DIFFUCLTY_LEVEL_SEARCH_PARAM}=${level}`;
+		const url = `${pathname}?${searchParams}`;
+
 		history.pushState({ pageId: 0, url: url }, '', url);
-		window.location.pathname = url;
+		window.location.pathname = pathname;
+		window.location.search = searchParams;
 	}
 
 	function cancel(): void {
@@ -39,9 +43,6 @@
 	}
 
 	function cancelOnKeydown(e: KeyboardEvent): void {
-		console.log('hello');
-		console.log(e.code);
-
 		if (e.code == 'Escape') {
 			cancel();
 		}
@@ -65,7 +66,7 @@
 				type="button"
 				value={level.name}
 				on:click={() => {
-					startNewGame();
+					startNewGame(level.level);
 				}}
 			/>
 		{/each}

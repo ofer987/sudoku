@@ -1,8 +1,15 @@
 <script lang="ts">
-	import { generatePuzzleFromBase64Hash, generateSudokuPuzzle } from './puzzle';
+	import { page } from '$app/stores';
+	import lodash from 'lodash';
+	const { toNumber } = lodash;
+
+	import {
+		generatePuzzleFromBase64Hash,
+		generateSudokuPuzzle,
+		DIFFUCLTY_LEVEL_SEARCH_PARAM
+	} from './puzzle';
 	import Puzzle from './Puzzle.svelte';
 	import NewGame from './NewGame.svelte';
-	import { page } from '$app/stores';
 
 	let puzzle: Puzzle | undefined;
 	let isNewGameMenuDisabled = true;
@@ -10,6 +17,17 @@
 	if ($page.url.hash != '') {
 		puzzle = generatePuzzleFromBase64Hash($page.url.hash.substring(1));
 	}
+
+	const getDifficultLevel = () => {
+		const value = toNumber($page.url.searchParams.get(DIFFUCLTY_LEVEL_SEARCH_PARAM) || '1');
+		if (value >= 1 && value <= 4) {
+			return value;
+		}
+
+		return 1;
+	};
+
+	const difficultyLevel = getDifficultLevel();
 
 	function startNewGame(): void {
 		isNewGameMenuDisabled = false;
@@ -28,7 +46,7 @@
 		{#if typeof puzzle != 'undefined'}
 			<Puzzle {puzzle} disabled={!isNewGameMenuDisabled} />
 		{:else}
-			{#await generateSudokuPuzzle() then resolvedPuzzle}
+			{#await generateSudokuPuzzle(difficultyLevel) then resolvedPuzzle}
 				<Puzzle puzzle={resolvedPuzzle} disabled={!isNewGameMenuDisabled} />
 			{/await}
 		{/if}

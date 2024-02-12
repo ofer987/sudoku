@@ -5,7 +5,10 @@ const { toNumber } = lodash;
 
 import sudokuJs from './sudokujs/index';
 
-export class Puzzle {
+const DIFFUCLTY_LEVEL_SEARCH_PARAM = 'level';
+type difficultyLevel = 1 | 2 | 3 | 4;
+
+class Puzzle {
 	public board: Tile[];
 
 	constructor(board: Tile[]) {
@@ -43,8 +46,8 @@ const getNumericValue = (value: number | string): number | null => {
 	return null;
 };
 
-export const generateSudokuPuzzle = async (): Promise<Puzzle> => {
-	const puzzle = await sudokuJs(4);
+const generateSudokuPuzzle = async (level: difficultyLevel): Promise<Puzzle> => {
+	const puzzle = await sudokuJs(level);
 
 	const tiles: Tile[] = [];
 	const board = puzzle.getBoard('array');
@@ -63,10 +66,12 @@ export const generateSudokuPuzzle = async (): Promise<Puzzle> => {
 	return new Puzzle(tiles);
 };
 
-export const generatePuzzleFromBase64Hash = (hash: string): Puzzle => {
+const generatePuzzleFromBase64Hash = (hash: string): Puzzle => {
 	const tiles = base64ToBytes(hash)
 		.split('\n')
 		.map((hash) => generateTileFromHash(hash));
 
 	return new Puzzle(tiles);
 };
+
+export { Puzzle, generateSudokuPuzzle, generatePuzzleFromBase64Hash, DIFFUCLTY_LEVEL_SEARCH_PARAM };
