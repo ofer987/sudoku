@@ -34,7 +34,7 @@
 		{/if}
 
 		<div class="new-game">
-			<label for="start-new-game">Start a new Game:</label>
+			<label for="start-new-game">Start a new game:</label>
 			<input
 				id="start-new-game"
 				type="button"
@@ -64,10 +64,6 @@
 				display: flex;
 				justify-content: space-between;
 				width: 44em;
-
-				/* label { */
-				/* 	padding-right: 7em; */
-				/* } */
 			}
 		}
 	}

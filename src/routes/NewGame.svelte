@@ -58,7 +58,7 @@
 	aria-label="container"
 >
 	<div class="levels">
-		<div>Difficult Level:</div>
+		<div>Difficulty Level:</div>
 		{#each levels as level}
 			<input
 				class="name"
