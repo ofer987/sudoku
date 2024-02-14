@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import lodash from 'lodash';
+	import { onMount } from 'svelte';
 	const { toNumber } = lodash;
 
 	import {
@@ -13,25 +14,36 @@
 
 	let puzzle: Puzzle | undefined;
 	let isNewGameMenuDisabled = true;
+	const hash = $page.url.hash;
 
-	if ($page.url.hash != '') {
-		puzzle = generatePuzzleFromBase64Hash($page.url.hash.substring(1));
-	}
-
-	const getDifficultLevel = () => {
-		const value = toNumber($page.url.searchParams.get(DIFFUCLTY_LEVEL_SEARCH_PARAM) || '1');
-		if (value >= 1 && value <= 4) {
-			return value;
+	const getDifficultyLevel = (value: string): number | null => {
+		const match = value.match(/level=(\d+)/i);
+		if (!match) {
+			return null;
 		}
 
-		return 1;
+		const result = toNumber(match[1]);
+
+		if (result < 1 || result > 4) {
+			return 1;
+		}
+
+		return result;
 	};
 
-	const difficultyLevel = getDifficultLevel();
+	let difficultyLevel: number | null;
+
+	if (hash != '') {
+		puzzle = generatePuzzleFromBase64Hash($page.url.hash.substring(1));
+	}
 
 	function startNewGame(): void {
 		isNewGameMenuDisabled = false;
 	}
+
+	onMount(() => {
+		difficultyLevel = getDifficultyLevel(window.location.search);
+	});
 </script>
 
 <svelte:head>
@@ -46,7 +58,9 @@
 		{#if typeof puzzle != 'undefined'}
 			<Puzzle {puzzle} disabled={!isNewGameMenuDisabled} />
 		{:else}
-			{#await generateSudokuPuzzle(difficultyLevel) then resolvedPuzzle}
+			{#await generateSudokuPuzzle(difficultyLevel ?? 1)}
+				<div>Loading</div>
+			{:then resolvedPuzzle}
 				<Puzzle puzzle={resolvedPuzzle} disabled={!isNewGameMenuDisabled} />
 			{/await}
 		{/if}
