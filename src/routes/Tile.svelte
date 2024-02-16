@@ -4,7 +4,7 @@
 	import { Tile } from './tile';
 
 	import lodash from 'lodash';
-	const { floor } = lodash;
+	const { floor, toNumber } = lodash;
 
 	export let tile: Tile;
 	export let isBeginnerMode: boolean;
@@ -81,6 +81,22 @@
 
 		return ' ';
 	}
+
+	function setValue(event: KeyboardEvent): void {
+		select();
+
+		const newValue = toNumber(event.key);
+		const target = event.target as HTMLInputElement;
+
+		if (!target) {
+			return;
+		}
+
+		if (!isNaN(newValue)) {
+			target.value = '';
+			dispatch();
+		}
+	}
 </script>
 
 <div
@@ -109,10 +125,7 @@
 				dispatch('numberChanged');
 				select();
 			}}
-			on:keyup={() => {
-				dispatch('numberChanged');
-				select();
-			}}
+			on:keydown={setValue}
 			bind:value={tile.current}
 			{disabled}
 		/>
@@ -155,7 +168,8 @@
 		.tile {
 			margin: 0 auto;
 			font-family: 'Fira Mono';
-			font-size: 1em;
+			text-align: center;
+			font-size: 2em;
 
 			display: grid;
 			color: red;
@@ -166,6 +180,11 @@
 
 			&.answer {
 				display: block;
+			}
+
+			&::-webkit-inner-spin-button,
+			&::-webkit-outer-spin-button {
+				appearance: none;
 			}
 		}
 	}
