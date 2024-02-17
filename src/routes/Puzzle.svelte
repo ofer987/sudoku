@@ -5,7 +5,7 @@
 	export let puzzle: Puzzle;
 	export let disabled = false;
 	let startingBoard = puzzle.board;
-	let isBeginnerMode = true;
+	let isBeginnerMode = false;
 	let copyText: 'copy' | 'copied' = 'copy';
 	let isCopyButtonEnabled = true;
 
