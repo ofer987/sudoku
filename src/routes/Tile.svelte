@@ -118,6 +118,7 @@
 			class="tile"
 			type="number"
 			class:correct={isBeginnerMode && tile.isCorrect}
+			class:is-tile-selected={isTileSelected}
 			min="1"
 			max="9"
 			inputmode="numeric"
@@ -130,7 +131,14 @@
 			{disabled}
 		/>
 	{:else}
-		<div class="tile answer" class:correct={tile.isCorrect}>
+		<div
+			class="tile answer"
+			class:correct={tile.isCorrect}
+			class:is-square-selected={isSquareSelected}
+			class:is-tile-selected={isTileSelected}
+			class:is-row-selected={isRowSelected}
+			class:is-column-selected={isColumnSelected}
+		>
 			{displayedValue()}
 		</div>
 	{/if}
@@ -140,7 +148,7 @@
 	.grid-element {
 		width: 100%;
 		height: 100%;
-		background-color: red;
+		background-color: grey;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -150,11 +158,11 @@
 		}
 
 		&.is-row-selected {
-			background-color: grey;
+			background-color: turquoise;
 		}
 
 		&.is-column-selected {
-			background-color: grey;
+			background-color: turquoise;
 		}
 
 		&.is-square-selected {
@@ -165,18 +173,43 @@
 			background-color: green;
 		}
 
+		input.tile {
+			&.correct {
+				color: blue;
+				background-color: white;
+			}
+		}
+
 		.tile {
 			margin: 0 auto;
 			font-family: 'Fira Mono';
 			text-align: center;
 			font-size: 2em;
 			width: 1em;
+			background-color: white;
 
 			display: grid;
 			color: red;
 
 			&.correct {
 				color: blue;
+				background-color: lightblue;
+			}
+
+			&.is-row-selected {
+				background-color: turquoise;
+			}
+
+			&.is-column-selected {
+				background-color: turquoise;
+			}
+
+			&.is-square-selected {
+				background-color: turquoise;
+			}
+
+			&.is-tile-selected {
+				background-color: green;
 			}
 
 			&.answer {
