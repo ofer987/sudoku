@@ -84,18 +84,23 @@
 		width: 44em;
 		display: flex;
 		flex-direction: row;
+		justify-content: space-between;
 
 		.beginner-mode {
 			display: flex;
+			align-items: center;
 			gap: 0.5em;
 			width: 44em;
 		}
 
 		.results {
 			width: 20em;
+			display: flex;
+			justify-content: right;
+			align-items: center;
 
 			.message {
-				float: right;
+				align-items: center;
 			}
 		}
 	}
@@ -111,7 +116,7 @@
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
-			width: 20em;
+			width: 18em;
 
 			#value {
 				overflow: hidden;
