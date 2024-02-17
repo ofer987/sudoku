@@ -192,7 +192,7 @@
 			color: red;
 
 			&.correct {
-				color: blue;
+				color: green;
 				background-color: lightblue;
 			}
 
@@ -208,12 +208,9 @@
 				background-color: turquoise;
 			}
 
-			&.is-tile-selected {
-				background-color: green;
-			}
-
 			&.answer {
 				display: block;
+				background-color: white;
 			}
 
 			&::-webkit-inner-spin-button,
