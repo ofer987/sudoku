@@ -4,11 +4,7 @@
 	import { onMount } from 'svelte';
 	const { toNumber } = lodash;
 
-	import {
-		generatePuzzleFromBase64Hash,
-		generateSudokuPuzzle,
-		DIFFUCLTY_LEVEL_SEARCH_PARAM
-	} from './puzzle';
+	import { generatePuzzleFromBase64Hash, generateSudokuPuzzle } from './puzzle';
 	import Puzzle from './Puzzle.svelte';
 	import NewGame from './NewGame.svelte';
 
@@ -65,15 +61,15 @@
 			{/await}
 		{/if}
 
-		<div class="new-game">
+		<div
+			class="new-game"
+			on:click={startNewGame}
+			on:keydown={startNewGame}
+			role="button"
+			tabindex="-1"
+		>
 			<label for="start-new-game">Start new game:</label>
-			<input
-				id="start-new-game"
-				type="button"
-				on:click={startNewGame}
-				disabled={!isNewGameMenuDisabled}
-				value="New Game"
-			/>
+			<input id="start-new-game" type="button" disabled={!isNewGameMenuDisabled} value="New Game" />
 		</div>
 
 		<NewGame bind:disabled={isNewGameMenuDisabled} />

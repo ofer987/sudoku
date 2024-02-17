@@ -62,13 +62,19 @@
 	{/each}
 </div>
 
-<div class="continue-container">
+<div
+	class="continue-container"
+	on:click={copyUrlToClipboard}
+	on:keydown={copyUrlToClipboard}
+	role="button"
+	tabindex="-1"
+>
 	<div class="link-container">
 		<label for="value">Continue later:</label>
-		<input type="button" id="value" on:click={copyUrlToClipboard} {disabled} value={pageUrl} />
+		<input type="button" id="value" {disabled} value={pageUrl} />
 	</div>
 
-	<input type="button" id="copy-value" on:click={copyUrlToClipboard} {disabled} value={copyText} />
+	<input type="button" id="copy-value" {disabled} value={copyText} />
 </div>
 
 <style lang="scss">
