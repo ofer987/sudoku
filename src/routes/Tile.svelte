@@ -170,6 +170,7 @@
 			font-family: 'Fira Mono';
 			text-align: center;
 			font-size: 2em;
+			width: 1em;
 
 			display: grid;
 			color: red;

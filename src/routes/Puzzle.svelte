@@ -64,7 +64,7 @@
 
 <div class="continue-container">
 	<div class="link-container">
-		<label for="value">Copy link to continue later:</label>
+		<label for="value">Continue later:</label>
 		<input type="button" id="value" on:click={copyUrlToClipboard} {disabled} value={pageUrl} />
 	</div>
 
@@ -104,23 +104,23 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		width: 44em;
+		width: 22em;
+		font-size: 2em;
 
 		.link-container {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
-			width: 39em;
+			width: 20em;
 
 			#value {
 				overflow: hidden;
-				font-size: 0.75em;
-				width: 29em;
+				width: 40%;
 			}
 		}
 
 		input#copy-value {
-			width: 5em;
+			width: 4em;
 		}
 	}
 </style>
