@@ -4,7 +4,7 @@
 	import { Tile } from './tile';
 
 	import lodash from 'lodash';
-	const { floor, toNumber } = lodash;
+	const { floor, toNumber, isNumber } = lodash;
 
 	export let tile: Tile;
 	export let isBeginnerMode: boolean;
@@ -92,9 +92,22 @@
 			return;
 		}
 
-		if (!isNaN(newValue)) {
-			target.value = '';
+		if (/shift|arrow|tab/i.test(event.key)) {
 			dispatch();
+			return;
+		}
+
+		target.value = '';
+		if (!isNumber(newValue)) {
+			event.preventDefault();
+			return;
+		}
+
+		if (newValue >= 1 && newValue <= 9) {
+			dispatch();
+		} else {
+			target.value = tile.current;
+			event.preventDefault();
 		}
 	}
 </script>
