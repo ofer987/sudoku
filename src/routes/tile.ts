@@ -21,6 +21,10 @@ export class Tile {
 	}
 
 	set current(value: number | null) {
+		if (value && (value < 1 || value > 9)) {
+			return;
+		}
+
 		this.currentValue = value;
 	}
 
