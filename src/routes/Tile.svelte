@@ -115,7 +115,7 @@
 <div
 	class="grid-element"
 	class:is-tile-selected={!disabled && isTileSelected}
-	class:correct={tile.isCorrect}
+	class:answer={tile.isAnswered}
 	class:is-row-selected={!disabled && isRowSelected}
 	class:is-column-selected={!disabled && isColumnSelected}
 	class:is-square-selected={!disabled && isSquareSelected}
@@ -146,7 +146,7 @@
 	{:else}
 		<div
 			class="tile answer"
-			class:correct={tile.isCorrect}
+			class:answer={tile.isAnswered}
 			class:is-square-selected={isSquareSelected}
 			class:is-tile-selected={isTileSelected}
 			class:is-row-selected={isRowSelected}
@@ -166,7 +166,7 @@
 		justify-content: center;
 		align-items: center;
 
-		&.correct {
+		&.answer {
 			background-color: lightblue;
 		}
 
@@ -204,21 +204,21 @@
 			display: grid;
 			color: red;
 
-			&.correct {
+			&.answer {
 				color: green;
-				background-color: lightblue;
+				background-color: white;
 			}
 
 			&.is-row-selected {
-				background-color: turquoise;
+				background-color: white;
 			}
 
 			&.is-column-selected {
-				background-color: turquoise;
+				background-color: white;
 			}
 
 			&.is-square-selected {
-				background-color: turquoise;
+				background-color: white;
 			}
 
 			&.answer {
