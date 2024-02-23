@@ -199,7 +199,6 @@
 		}
 
 		.tile {
-			margin: 0 auto;
 			font-family: 'Fira Mono';
 			text-align: center;
 			font-size: 2em;
