@@ -188,6 +188,8 @@
 
 		input.tile {
 			-webkit-appearance: none;
+			-webkit-border-radius: 0;
+			border-width: 0;
 			border-radius: 0;
 
 			&.correct {
