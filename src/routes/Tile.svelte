@@ -187,6 +187,9 @@
 		}
 
 		input.tile {
+			-webkit-appearance: none;
+			border-radius: 0;
+
 			&.correct {
 				color: blue;
 				background-color: white;
